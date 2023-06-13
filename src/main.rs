@@ -1,5 +1,5 @@
 use eframe::{egui, Frame};
-use egui::{Align, Align2, Context, Direction, vec2};
+use egui::{Align2, Context};
 
 fn main() -> Result<(), eframe::Error>{
     let options = eframe::NativeOptions {
@@ -32,7 +32,7 @@ impl eframe::App for MyApp{
             egui::containers::Window::new("Do you want to quit?")
                 .collapsible(false)
                 .resizable(false)
-                .anchor(Align2::CENTER_CENTER, vec2(0.0, 0.0))
+                .anchor(Align2::CENTER_CENTER, egui::vec2(0.0, 0.0))
                 .show(ctx, |ui| {
                     egui::Grid::new("some id").show(ui, |ui| {
                         ui.horizontal(|ui| {
