@@ -1,9 +1,11 @@
 use eframe::{egui, Frame};
-use egui::Context;
+use egui::{Align, Align2, Context, Direction, vec2};
 
 fn main() -> Result<(), eframe::Error>{
     let options = eframe::NativeOptions {
-        initial_window_size: Some(egui::vec2(320.0, 240.0)),
+        icon_data: None,
+        initial_window_size: Some(egui::vec2(640.0, 480.0)),
+        centered: true,
         ..Default::default()
     };
     eframe::run_native(
@@ -21,27 +23,31 @@ struct MyApp {
 
 impl eframe::App for MyApp{
     fn update(&mut self, ctx: &Context, frame: &mut Frame) {
-        egui::CentralPanel::default().show(ctx, |ui| {
+        egui::containers::CentralPanel::default().show(ctx, |ui| {
            ui.heading("Try to close the window");
         });
 
         if self.show_confirmation_dialog {
             // Show the confirmation dialog.
-            egui::Window::new("Do you want to quit?")
+            egui::containers::Window::new("Do you want to quit?")
                 .collapsible(false)
                 .resizable(false)
+                .anchor(Align2::CENTER_CENTER, vec2(0.0, 0.0))
                 .show(ctx, |ui| {
-                    ui.horizontal(|ui| {
-                        if ui.button("Cancel").clicked() {
-                            self.show_confirmation_dialog = false;
-                        }
-
-                        if ui.button("Yes!").clicked() {
-                            self.allowed_to_close = true;
-                            frame.close();
-                        }
+                    egui::Grid::new("some id").show(ui, |ui| {
+                        ui.horizontal(|ui| {
+                            if ui.button("Yes").clicked() {
+                                self.allowed_to_close = true;
+                                frame.close();
+                            }
+                            if ui.button("Cancel").clicked() {
+                                self.show_confirmation_dialog = false;
+                            }
+                        });
+                        ui.end_row();
                     });
                 });
+
         }
     }
 
